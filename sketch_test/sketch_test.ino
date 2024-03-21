@@ -1,14 +1,18 @@
+#include <IRremote.h>
 
-// the setup function runs once when you press reset or power the board
+const int RECV_PIN = 11;
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
+  irrecv.enableIRIn(); // Start the receiver
+  Serial.println("IR Receiver Ready");
 }
 
-// the loop function runs over and over again forever
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);                       // wait for a second
+  if (irrecv.decode(&results)) {
+    Serial.println(results.value, HEX);
+    irrecv.resume(); // Receive the next value
+  }
 }
