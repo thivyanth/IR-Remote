@@ -4,10 +4,17 @@
 
 #include "./data.h"
 
+#include <SoftwareSerial.h>
+#include "./gamepad_control.hpp"
+
 IRrecvPCI myReceiver(2); // Arduino UNO pin 2 for receiving IR
 IRsendRaw mySender;      // For sending IR signals
 
+// SoftwareSerial bluetoothSerial(4, 5); // RX, TX
+
+
 void setup() {
+  // bluetoothSerial.begin(9600);
   Serial.begin(9600);
   myReceiver.enableIRIn();
 
@@ -16,6 +23,11 @@ void setup() {
 }
 
 void loop() {
+  if (Serial.available()) {
+    char command = Serial.read();
+    executeCommand(command);
+  }
+
   if (myReceiver.getResults()) {
     Serial.println("\n\n-------------------------");
     Serial.println("Received IR signal:");
@@ -62,7 +74,7 @@ void alternateOnOff() {
 
 // Assuming FanSpeed array of pointers is defined and initialized as shown previously
 unsigned long previousCycleMillis = 0;
-const long cycleInterval = 3000; // Interval between speed changes, adjust as needed
+const long cycleInterval = 2000; // Interval between speed changes, adjust as needed
 int currentSpeedIndex = 0; // To keep track of which speed we're on
 
 void cycleSpeed() {
@@ -91,7 +103,7 @@ void testing() {
   if (currentMillis - previousTestMillis >= testInterval) {
     previousTestMillis = currentMillis;
     // Assuming you define FanSpeedB or you can replace it with one of the FanSpeeds
-    mySender.send(FanSpeed1, RAW_DATA_LEN, 38); // Example using FanSpeed1
+    mySender.send(FanSpeedB, RAW_DATA_LEN, 38); // Example using FanSpeedB
     Serial.println("Sent Turn ON MaxSpeed");
   }
 }
