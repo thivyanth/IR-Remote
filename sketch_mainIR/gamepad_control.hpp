@@ -1,3 +1,10 @@
+#include <SoftwareSerial.h>
+
+// Define the pins
+#define RX_PIN 10
+#define TX_PIN 11
+
+// Define command constants
 #define FORWARD 'F'
 #define BACKWARD 'B'
 #define LEFT 'L'
@@ -9,14 +16,18 @@
 #define START 'A'
 #define PAUSE 'P'
 
+// Create a software serial object
+SoftwareSerial myBluetooth(RX_PIN, TX_PIN);
+
 // void setup() {
-//   Serial.begin(9600);  // Set the baud rate for serial communication
+//   myBluetooth.begin(9600);  // Set the baud rate for Bluetooth communication
+//   Serial.begin(9600);       // Set the baud rate for serial communication to PC
 //   // Initialize any other necessary setup code here
 // }
 
 // void loop() {
-//   if (Serial.available()) {
-//     char command = Serial.read();
+//   if (myBluetooth.available()) {
+//     char command = myBluetooth.read();
 //     executeCommand(command);
 //   }
 //   // Continue with other tasks in your main loop
@@ -25,38 +36,37 @@
 void executeCommand(char command) {
   switch (command) {
     case FORWARD:
-      // Perform action for moving forward
-      Serial.println("pressed");
+      Serial.println("Moving forward");
       break;
     case BACKWARD:
-      // Perform action for moving backward
+      Serial.println("Moving backward");
       break;
     case LEFT:
-      // Perform action for turning left
+      Serial.println("Turning left");
       break;
     case RIGHT:
-      // Perform action for turning right
+      Serial.println("Turning right");
       break;
     case CIRCLE:
-      // Perform action for circle
+      Serial.println("Circle");
       break;
     case CROSS:
-      // Perform action for immediate stop or crossing
+      Serial.println("Stop/Cross");
       break;
     case TRIANGLE:
-      // Perform action for toggling a state (e.g., LED on/off)
+      Serial.println("Toggle state");
       break;
     case SQUARE:
-      // Perform action for retrieving and sending status information
+      Serial.println("Status info");
       break;
     case START:
-      // Perform action for starting a process or operation
+      Serial.println("Start");
       break;
     case PAUSE:
-      // Perform action for pausing a process or operation
+      Serial.println("Pause");
       break;
     default:
-      // Invalid command received
+      Serial.println("Invalid command");
       break;
   }
 }

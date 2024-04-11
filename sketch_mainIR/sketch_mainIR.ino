@@ -5,27 +5,44 @@
 #include "./data.h"
 
 #include <SoftwareSerial.h>
-#include "./gamepad_control.hpp"
-
+// #include "./gamepad_control.hpp"
 IRrecvPCI myReceiver(2); // Arduino UNO pin 2 for receiving IR
 IRsendRaw mySender;      // For sending IR signals
 
-// SoftwareSerial bluetoothSerial(4, 5); // RX, TX
+// Define the pins
+#define RX_PIN 10
+#define TX_PIN 11
 
+// Define command constants
+#define FORWARD 'F'
+#define BACKWARD 'B'
+#define LEFT 'L'
+#define RIGHT 'R'
+#define CIRCLE 'C'
+#define CROSS 'X'
+#define TRIANGLE 'T'
+#define SQUARE 'S'
+#define START 'A'
+#define PAUSE 'P'
+
+
+// Create a software serial object
+// SoftwareSerial myBluetooth(RX_PIN, TX_PIN);
 
 void setup() {
-  // bluetoothSerial.begin(9600);
   Serial.begin(9600);
   myReceiver.enableIRIn();
-
+// 
+  myBluetooth.begin(9600);
+// 
   Serial.println("Ready to receive IR signals");
   Serial.println("Point the remote controller to the IR receiver and press!");
 }
 
 void loop() {
-  if (Serial.available()) {
-    char command = Serial.read();
-    executeCommand(command);
+  if (myBluetooth.available()) {
+    char command = myBluetooth.read();
+    gamepadControl(command);
   }
 
   if (myReceiver.getResults()) {
@@ -58,15 +75,65 @@ void loop() {
   testing();
 }
 
+void gamepadControl(char command) {
+  switch (command) {
+    case FORWARD:
+      mySender.send(FanSpeed1, RAW_DATA_LEN, 38);
+      Serial.print("Sent Turn ON Speed ");
+      Serial.println(1);
+      break;
+    case RIGHT:
+      mySender.send(FanSpeed3, RAW_DATA_LEN, 38);
+      Serial.print("Sent Turn ON Speed ");
+      Serial.println(3);
+      break;
+    case BACKWARD:
+      mySender.send(FanSpeed4, RAW_DATA_LEN, 38);
+      Serial.print("Sent Turn ON Speed ");
+      Serial.println(4);
+      break;
+    case LEFT:
+      mySender.send(FanSpeed5, RAW_DATA_LEN, 38);
+      Serial.print("Sent Turn ON Speed ");
+      Serial.println(5);
+      break;
+    case CIRCLE:
+      mySender.send(FanOnOff, RAW_DATA_LEN, 38);
+      Serial.println("Sent Turn ON/OFF");
+      break;
+    case CROSS:
+      Serial.println("Stop/Cross");
+      break;
+    case TRIANGLE:
+      mySender.send(FanSpeedB, RAW_DATA_LEN, 38);
+      Serial.print("Sent Turn ON Speed MAX");
+      Serial.println(1);
+      break;
+    case SQUARE:
+      Serial.println("Status info");
+      break;
+    case START:
+      Serial.println("Start");
+      break;
+    case PAUSE:
+      Serial.println("Pause");
+      break;
+    default:
+      Serial.println("Invalid command");
+      // Serial.println(command);
+      break;
+  }
+}
+
 //function to alternate FanOnOff
 unsigned long previousMillis = 0; 
-const long interval = 3000; // Example interval for actions
+const long interval = 2000; // Example interval for actions
 
 void alternateOnOff() {
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
-    mySender.send(FanOnOff, RAW_DATA_LEN, 38);
+    mySender.send(HitachiACONOFF, 100, 38);
     Serial.println("Sent Turn ON/OFF");
   }
 }
@@ -96,14 +163,17 @@ void cycleSpeed() {
 
 //function to test IR
 unsigned long previousTestMillis = 0;
-const long testInterval = 1000; // Interval for testing, adjust as needed
+const long testInterval = 3000; // Interval for testing, adjust as needed
 
 void testing() {
   unsigned long currentMillis = millis();
   if (currentMillis - previousTestMillis >= testInterval) {
     previousTestMillis = currentMillis;
     // Assuming you define FanSpeedB or you can replace it with one of the FanSpeeds
-    mySender.send(FanSpeedB, RAW_DATA_LEN, 38); // Example using FanSpeedB
+    // mySender.send(FanSpeedB, 68, 38); // Example using FanSpeedB
+    mySender.send(FanSpeedB, 68, 38);
     Serial.println("Sent Turn ON MaxSpeed");
   }
 }
+
+
