@@ -1,5 +1,3 @@
-Below is a comprehensive `README.md` template that you can use to document your Arduino project, which includes the control of devices using IR signals and optional Bluetooth interface. This README provides all necessary details to help any developer understand and get started with the project quickly.
-
 ---
 
 # Arduino IR and Bluetooth Control System
