@@ -37,7 +37,7 @@ The included Arduino sketch (`sketch_mainIR.ino`) sets up the hardware interface
    - Search for "IRLib2" and install it for handling IR signals.
    - If using Bluetooth, ensure the `SoftwareSerial` library is installed (included with Arduino IDE).
 3. **Clone the Repository:**
-   - Use `git clone https://github.com/yourusername/yourprojectname.git` or download the ZIP file and extract it in your Arduino projects directory.
+   - Use `git clone https://github.com/thivyanth/IR-Remote.git` or download the ZIP file and extract it in your Arduino projects directory.
 
 ## Configuration
 
